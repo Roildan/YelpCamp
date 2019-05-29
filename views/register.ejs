@@ -1,0 +1,31 @@
+<% include partials/header %>
+
+<h1 class="text-center mt-3">Sign Up</h1>
+
+<div class="formidable">
+    <form action="/register" method="POST">
+        <div class="form-group">
+            <label for="inputUsername">Username:</label>
+            <input class="form-control" type="text" id="inputUsername" name="username" placeholder="Username" required>
+        </div>
+        <div class="form-group">
+            <label for="inputEmail">Email:</label>
+            <input class="form-control" type="email" name="email" id="inputEmail" placeholder="harry.potter@hogward.univ">
+        </div>
+        <div class="form-group">
+            <label for="inputPassword">Password:</label>
+            <input class="form-control" type="password" id="inputPassword" name="password" placeholder="Password" required>
+        </div>
+        <div class="form-group">
+            <label for="inputAdmin">Admin Code:</label>
+            <input class="form-control" type="text" id="inputAdmin" name="adminCode" placeholder="Admin Code">
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block">Sign Up!</button>
+        </div>
+    </form>
+
+    <a href="/campgrounds">Go Back</a>
+</div>
+
+<% include partials/footer %>

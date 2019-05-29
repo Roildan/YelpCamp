@@ -1,0 +1,77 @@
+<% include ../partials/header %>
+
+<h1 class="text-center"><%= user.username %>'s Profile</h1>
+
+<h2>Identity:</h2>
+<table class="table table-bordered">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">First Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">Email</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><%= user.firstName %></td>
+            <td><%= user.lastName %></td>
+            <td><a href="mailto:<%= user.email %>"><%= user.email %></a></td>
+        </tr>
+    </tbody>
+</table>
+
+<% if (currentUser && (currentUser.isAdmin || currentUser._id.equals(user._id))) { %>
+    <a class="btn btn-warning mb-4" href="/users/<%= user._id %>/editIdentity">Edit</a>
+<% } %>
+
+<h2>Address:</h2>
+<table class="table table-bordered">
+    <tbody>
+        <tr>
+            <th scope="row">Address 1:</th>
+            <td><%= user.address.address1 %></td>
+        </tr>
+        <% if (user.address.address2 && user.address.address2.length > 0) { %>
+            <tr>
+                <th scope="row">Address 2:</th>
+                <td><%= user.address.address2 %></td>
+            </tr>
+        <% } %>
+        <tr>
+            <th scope="row">City:</th>
+            <td><%= user.address.city %></td>
+        </tr>
+        <tr>
+            <th scope="row">Zip Code:</th>
+            <td><%= user.address.zipCode %></td>
+        </tr>
+        <tr>
+            <th scope="row">Country:</th>
+            <td><%= user.address.country %></td>
+        </tr>
+    </tbody>
+</table>
+
+<% if (currentUser && (currentUser.isAdmin || currentUser._id.equals(user._id))) { %>
+    <a class="btn btn-warning mb-4" href="/users/<%= user._id %>/editAddress">Edit</a>
+<% } %>
+
+<h2>Campgrounds Created:</h2>
+<% if (campgrounds.length > 0) { %>
+    <ul class="list-group">
+        <% campgrounds.forEach((campground) => { %>
+            <li class="list-group-item">
+                <span class="float-right">
+                    <% const comments = campground.comments.length; %>
+                    <%= comments %> Comment<%= comments > 1 ? "s" : "" %>
+                </span>
+                <a href="/campgrounds/<%= campground._id %>"><%= campground.name %></a>
+            </li>
+        <% }); %>
+    </ul>
+<% } else { %>
+    <p>None yet!</p>
+<% } %>
+
+
+<% include ../partials/footer %>

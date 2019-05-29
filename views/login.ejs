@@ -1,0 +1,23 @@
+<% include partials/header %>
+
+<h1 class="text-center mt-3">Login</h1>
+
+<div class="formidable">
+    <form action="/login" method="POST">
+        <div class="form-group">
+            <label for="inputUsername">Username:</label>
+            <input class="form-control" type="text" id="inputUsername" name="username" placeholder="Username" required>
+        </div>
+        <div class="form-group">
+            <label for="inputPassword">Password:</label>
+            <input class="form-control" type="password" id="inputPassword" name="password" placeholder="Password" required>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block">Login!</button>
+        </div>
+    </form>
+
+    <a href="/campgrounds">Go Back</a>
+</div>
+
+<% include partials/footer %>
