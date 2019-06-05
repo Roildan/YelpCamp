@@ -2,6 +2,7 @@ const express       = require("express"),
       nodeGeocoder  = require("node-geocoder"),
       Campground    = require("../models/campground"),
       Comment       = require("../models/comment"),
+      Review        = require("../models/review"),
       middleware    = require("../middleware"),
       router        = express.Router();
 
@@ -14,13 +15,32 @@ const geocoder = nodeGeocoder({
 
 // INDEX -- Display all campgrounds
 router.get("/", (req, res) => {
-    Campground.find({}, (err, campgrounds) => {
-        if (err) {
-            req.flash("error", "Database error, please contact an admin!");
-            res.redirect("back");
-        } else
-            res.render("campgrounds/index", {campgrounds: campgrounds, page: "campgrounds"});
-    });
+    const perPage = 8;
+    const pageQuery = parseInt(req.query.page);
+    const pageNumber = pageQuery ? pageQuery : 1;
+    Campground
+        .find({})
+        .skip((perPage * pageNumber) - perPage)
+        .limit(perPage)
+        .exec((err, campgrounds) => {
+            if (err) {
+                req.flash("error", "Database error, please contact an admin!");
+                return (res.redirect("back"));
+            }
+            Campground.countDocuments().exec((err, count) => {
+                if (err) {
+                    req.flash("error", "Database error, please contact an admin!");
+                    res.redirect("back");
+                } else {
+                    res.render("campgrounds/index", {
+                        campgrounds: campgrounds,
+                        current: pageNumber,
+                        pages: Math.ceil(count / perPage),
+                        page: "campgrounds"
+                    });
+                }
+            });
+        });
 });
 
 // CREATE -- Add new campground to database
@@ -58,13 +78,20 @@ router.get("/new", middleware.isLoggedIn, (req, res) => {
 
 // SHOW -- Display a particular campground
 router.get("/:campgroundId", (req, res) => {
-    Campground.findById(req.params.campgroundId).populate("comments").exec((err, campground) => {
-        if (err || !campground) {
-            req.flash("error", "Database error, please contact an admin!");
-            res.redirect("back");
-        } else
+    Campground
+        .findById(req.params.campgroundId)
+        .populate("comments")
+        .populate({
+            path: "reviews",
+            options: { sort: { createdAt: -1 } }
+        })
+        .exec((err, campground) => {
+            if (err || !campground) {
+                req.flash("error", "Database error, please contact an admin!");
+                return (res.redirect("back"));
+            }
             res.render("campgrounds/show", {campground: campground});
-    });
+        });
 });
 
 // EDIT -- Display a form for editing a campground
@@ -80,6 +107,8 @@ router.get("/:campgroundId/edit", middleware.checkUserCampground, (req, res) => 
 
 // UPDATE -- Update the post whith the infomations of EDIT form
 router.put("/:campgroundId", middleware.checkUserCampground, (req, res) => {
+    // Security to avoid unwanted change on rating property
+    delete req.body.campground.rating;
     Campground.findByIdAndUpdate(req.params.campgroundId, req.body.campground, (err, campground) => {
         if (err || !campground) {
             req.flash("error", "Database error, please contact an admin!");
@@ -105,18 +134,26 @@ router.put("/:campgroundId", middleware.checkUserCampground, (req, res) => {
 
 // DELETE -- Remove the post from the database
 router.delete("/:campgroundId", middleware.checkUserCampground, (req, res) => {
-    Campground.findByIdAndRemove(req.params.campgroundId, (err, campground) => {
+    Campground.findById(req.params.campgroundId, (err, campground) => {
         if (err || !campground) {
             req.flash("error", "Database error, please contact an admin!");
-            res.redirect("back");
-        } else {
-            Comment.deleteMany({ _id: { $in: campground.comments } }, (err) => {
-                if (err)
-                    req.flash("error", "Database error, please contact an admin!");
-            });
-            req.flash("success", campground.name + " have been deleted!");
-            res.redirect("/campgrounds");
+            return (res.redirect("back"));
         }
+        Comment.deleteMany({ "_id": { $in: campground.comments } }, (err) => {
+            if (err) {
+                req.flash("error", "Database error, please contact an admin!");
+                return (res.redirect("back"));
+            }
+        });
+        Review.deleteMany({ "_id": { $in: campground.reviews } }, (err) => {
+            if (err) {
+                req.flash("error", "Database error, please contact an admin!");
+                return (res.redirect("back"));
+            }
+        });
+        campground.remove();
+        req.flash("success", campground.name + " have been deleted!");
+        res.redirect("/campgrounds");
     });
 });
 

@@ -26,6 +26,9 @@
                 <li class="nav-item <%= typeof page !== 'undefined' && page === 'campgrounds' ? 'active' : '' %>">
                     <a class="nav-link" href="/campgrounds"><i class="fas fa-home"></i>Home</a>
                 </li>
+                <li class="nav-item <%= typeof page !== 'undefined' && page === 'map' ? 'active' : '' %>">
+                    <a class="nav-link" href="/map"><i class="fas fa-map-marked-alt"></i>Map</a>
+                </li>
             </ul>
             <ul class="navbar-nav">
                 <% if (!currentUser) { %>

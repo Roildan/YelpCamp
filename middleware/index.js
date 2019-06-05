@@ -1,5 +1,6 @@
 const Campground = require("../models/campground"),
       Comment    = require("../models/comment"),
+      Review     = require("../models/review"),
       User       = require("../models/user");
 
 const middleware = {};
@@ -47,6 +48,49 @@ middleware.checkUserComment = function(req, res, next) {
                     req.flash("error", "You don't have permission to do that!");
                     res.redirect("back");
                 }
+            }
+        });
+    } else {
+        req.flash("error", "You need to be logged in to do that!");
+        res.redirect("/login");
+    }
+}
+
+middleware.checkUserReview = function(req, res, next) {
+    if (req.isAuthenticated()) {
+        Review.findById(req.params.reviewId, (err, review) => {
+            if (err || !review) {
+                req.flash("error", "Database error, please contact an admin!");
+                res.redirect("back");
+            }
+            else {
+                if (review.author.id.equals(req.user._id) || req.user.isAdmin)
+                    next();
+                else {
+                    req.flash("error", "You don't have permission to do that!");
+                    res.redirect("back");
+                }
+            }
+        });
+    } else {
+        req.flash("error", "You need to be logged in to do that!");
+        res.redirect("/login");
+    }
+}
+
+middleware.checkUniqueReview = function(req, res, next) {
+    if (req.isAuthenticated()) {
+        Campground.findById(req.params.campgroundId).populate("reviews").exec((err, campground) => {
+            if (err || !campground) {
+                req.flash("error", "Database error, please contact an admin!");
+                res.redirect("back");
+            }
+            else {
+                if (campground.reviews.some(review => review.author.id.equals(req.user._id))) {
+                    req.flash("error", "You already reviewed this campground!");
+                    res.redirect("back");
+                } else
+                    next();
             }
         });
     } else {

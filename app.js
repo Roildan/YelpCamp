@@ -19,6 +19,7 @@ const express           = require("express"),
 // ================ //
 const commentRoutes     = require("./routes/comments"),
       campgroundRoutes  = require("./routes/campgrounds"),
+      reviewRoutes      = require("./routes/reviews"),
       userRoutes        = require("./routes/users"),
       indexRoutes       = require("./routes/index");
 
@@ -40,6 +41,7 @@ mongoose.connect(process.env.MONGODB_URI, {useNewUrlParser: true})
     .then(() => console.log("Database connected!"))
     .catch((err) => console.log("Database error: " + err.message));
 mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
 //seedDB();
 
 // ======================== //
@@ -72,6 +74,7 @@ app.use((req, res, next) => {
 app.use("/users", userRoutes);
 app.use("/campgrounds", campgroundRoutes);
 app.use("/campgrounds/:campgroundId/comments", commentRoutes);
+app.use("/campgrounds/:campgroundId/reviews", reviewRoutes);
 app.use(indexRoutes);
 
 // ================= //

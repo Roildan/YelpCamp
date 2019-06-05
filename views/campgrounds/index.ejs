@@ -19,15 +19,75 @@
     <% campgrounds.forEach((camp) => { %>
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
             <div class="card">
-                <img class="card-img-top" src="<%= camp.image %>" alt="<%= camp.name %>">
+                <div class="cardImage">
+                    <img class="card-img-top" src="<%= camp.image %>" alt="<%= camp.name %>">
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title"><%= camp.name %></h5>
+                    <h4 class="card-title"><u><%= camp.name %></u></h4>
+                    <p class="card-text text-left">
+                        <small><%= camp.description.substring(0, 50) %>...</small>
+                    </p>
+                    <p class="card-text">
+                        <% if (camp.rating === 0) { %>
+                            <em>No reviews yet...</em>
+                        <% } else { %>
+                            <i class="fas fa-star checked"></i>
+                            <i class="fas fa-star <% if (camp.rating > 1.5) { %> checked <% } %>"></i>
+                            <i class="fas fa-star <% if (camp.rating > 2.5) { %> checked <% } %>"></i>
+                            <i class="fas fa-star <% if (camp.rating > 3.5) { %> checked <% } %>"></i>
+                            <i class="fas fa-star <% if (camp.rating > 4.5) { %> checked <% } %>"></i>
+                        <% } %>
+                    </p>
                     <a href="/campgrounds/<%= camp._id %>" class="btn btn-primary">More Info</a>
                 </div>
             </div>
         </div>
     <% }); %>
 </div>
+
+<nav aria-label="Page navigation">
+    <% if (pages && pages > 0) { %>
+        <ul class="pagination justify-content-center">
+            <% if (current == 1) { %>
+                <li class="page-item disabled"><a class="page-link">First</a></li>
+            <% } else { %>
+                <li><a href="/campgrounds" class="page-link">First</a></li>
+            <% } %>
+            <% if (current == 1) { %>
+                <li class="page-item disabled"><a class="page-link">«</a></li>
+            <% } else { %>
+                <li><a href="/campgrounds?page=<%= Number(current) - 1 %>" class="page-link">«</a></li>
+            <% } %>
+
+            <% var i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
+            <% if (i !== 1) { %>
+                <li class="page-item disabled"><a class="page-link">...</a></li>
+            <% } %>
+            <% for (; i <= (Number(current) + 4) && i <= pages; i++) { %>
+                <% if (i == current) { %>
+                    <li class="active"><a class="page-link"><%= i %></a></li>
+                <% } else { %>
+                    <li><a href="/campgrounds?page=<%= i %>" class="page-link"><%= i %></a></li>
+                <% } %>
+                <% if (i == (Number(current) + 4) && i < pages) { %>
+                    <li class="page-item disabled"><a class="page-link">...</a></li>
+                <% } %>
+            <% } %>
+
+            <% if (current == pages) { %>
+                <li class="page-item disabled"><a class="page-link">»</a></li>
+            <% } else { %>
+                <li><a href="/campgrounds?page=<%= Number(current) + 1 %>" class="page-link">»</a></li>
+            <% } %>
+
+            <% if (current == pages) { %>
+                <li class="page-item disabled"><a class="page-link">Last</a></li>
+            <% } else { %>
+                <li><a href="/campgrounds?page=<%= pages %>" class="page-link">Last</a></li>
+            <% } %>
+        </ul>
+    <% } %>
+</nav>
 
 <script src="/js/search.js"></script>
 

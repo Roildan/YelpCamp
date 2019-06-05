@@ -1,8 +1,9 @@
-const express   = require("express"),
-      passport  = require("passport"),
-      User      = require("../models/user"),
+const express       = require("express"),
+      passport      = require("passport"),
+      User          = require("../models/user"),
+      Campground    = require("../models/campground"),
       middleware    = require("../middleware"),
-      router    = express.Router();
+      router        = express.Router();
 
 // Landing page
 router.get("/", (req, res) => {
@@ -60,6 +61,17 @@ router.get("/logout", middleware.isLoggedIn, (req, res) => {
     req.logout();
     req.flash("success", "Goodbye " + user + "! Have a nice day :)");
     res.redirect("/campgrounds");
+});
+
+// MAP -- Display a map with all campgrounds
+router.get("/map", (req, res) => {
+    Campground.find({}, (err, campgrounds) => {
+        if (err) {
+            req.flash("error", "Database error, please contact an admin!");
+            res.redirect("back");
+        } else
+            res.render("map", {campgrounds: campgrounds, page: "map"});
+    });
 });
 
 // Wrong Url

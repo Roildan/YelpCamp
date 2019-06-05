@@ -1,0 +1,56 @@
+<% include partials/header %>
+
+<div id="mapWorld"></div>
+
+<script>
+    function initMap() {
+        var center;
+        <% if (campgrounds.length !== 0) { %>
+            center = {
+                lat: <%= campgrounds[0].lat %>,
+                lng: <%= campgrounds[0].lng %>
+            };
+        <% } else { %>
+            // Center of France
+            center = {
+                lat: 46.854505,
+                lng: 2.411272
+            }
+        <% } %>  
+        const map = new google.maps.Map(document.getElementById('mapWorld'), {
+            zoom: 3,
+            center: center,
+            scrollwheel: true
+        });
+        const markers = [];
+        <% campgrounds.forEach((camp, i) => { %>
+            markers[<%= i %>] =  new google.maps.Marker({
+                position: {
+                    lat: <%= camp.lat %>,
+                    lng: <%= camp.lng %>
+                },
+                map: map,
+                title: "<%= camp.name %>",
+            });
+            markers[<%= i %>].addListener("click", () => {
+                new google.maps.InfoWindow({
+                    content: `
+                        <a href="/campgrounds/<%= camp._id %>"><%= camp.name %></a><br />
+                        <p><%= camp.description.substring(0, 50) %>... %></p>
+                    `
+                }).open(map, markers[<%= i %>]);
+            });
+        <% }); %>
+        const markerCluster = new MarkerClusterer(map, markers, {
+            imagePath: '/image/markerCluster/m'
+        });
+    }
+</script>
+<script src="/js/markerCluster.js">
+</script>
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAkV5Lo9V013EhHl5IFPxIi4cl9yKoyz-s&callback=initMap">
+</script>
+    
+
+<% include partials/footer %>

@@ -3,9 +3,10 @@
 <h1 class="text-center"><%= user.username %>'s Profile</h1>
 
 <h2>Identity:</h2>
-<table class="table table-bordered">
+<table class="table table-bordered table-responsive-sm">
     <thead class="thead-dark">
         <tr>
+            <th scope="col">Avatar</th>
             <th scope="col">First Name</th>
             <th scope="col">Last Name</th>
             <th scope="col">Email</th>
@@ -13,6 +14,11 @@
     </thead>
     <tbody>
         <tr>
+            <td>
+                <% if (user.avatar.length !== 0) { %>
+                    <img src="<%= user.avatar %>" alt="userAvatar">
+                <% } %>
+            </td>
             <td><%= user.firstName %></td>
             <td><%= user.lastName %></td>
             <td><a href="mailto:<%= user.email %>"><%= user.email %></a></td>
@@ -58,19 +64,35 @@
 
 <h2>Campgrounds Created:</h2>
 <% if (campgrounds.length > 0) { %>
-    <ul class="list-group">
+    <ul class="list-group pb-5">
         <% campgrounds.forEach((campground) => { %>
             <li class="list-group-item">
-                <span class="float-right">
-                    <% const comments = campground.comments.length; %>
-                    <%= comments %> Comment<%= comments > 1 ? "s" : "" %>
-                </span>
-                <a href="/campgrounds/<%= campground._id %>"><%= campground.name %></a>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <a href="/campgrounds/<%= campground._id %>"><%= campground.name %></a>
+                    </div>
+                    <div class="col-sm-4">
+                            <% if (campground.rating === 0) { %>
+                                <p><em>No reviews yet...</em></p>
+                            <% } else { %>
+                                <i class="fas fa-star checked"></i>
+                                <i class="fas fa-star <% if (campground.rating > 1.5) { %> checked <% } %>"></i>
+                                <i class="fas fa-star <% if (campground.rating > 2.5) { %> checked <% } %>"></i>
+                                <i class="fas fa-star <% if (campground.rating > 3.5) { %> checked <% } %>"></i>
+                                <i class="fas fa-star <% if (campground.rating > 4.5) { %> checked <% } %>"></i>
+                                <em>(<%= campground.reviews.length %> review<%= campground.reviews.length > 1 ? "s" : "" %>)</em>
+                            <% } %>
+                    </div>
+                    <div class="col-sm-4 text-right">
+                            <% const comments = campground.comments.length; %>
+                            <%= comments %> Comment<%= comments > 1 ? "s" : "" %>
+                    </div>
+                </div>
             </li>
         <% }); %>
     </ul>
 <% } else { %>
-    <p>None yet!</p>
+    <p class="pb-5">None yet!</p>
 <% } %>
 
 
