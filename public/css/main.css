@@ -45,7 +45,7 @@
     transform: translateX(-50%) translateY(-50%);
 }
 
-i.fas:not(.fa-star) {
+i.fas:not(.fa-star), i.fab {
     margin-right: 0.5rem;
 }
 
