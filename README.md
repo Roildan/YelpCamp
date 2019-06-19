@@ -9,7 +9,7 @@ Introduction
 You can see the live web site here: [YelpCamp](https://yelp-camp-v0.herokuapp.com "YelpCamp")
 (hosted on [Heroku](https://heroku.com "Heroku Web Site")).  
 I made this small app in order to practice my skills in Web technologies and point out my abilities.  
-Check Usage for more details.
+Check [Usage](https://github.com/Roildan/YelpCamp#usage "Usage") for more details.
 
 Technologies Used
 -----------------
@@ -27,7 +27,7 @@ Usage
 
 As the [License](https://github.com/Roildan/YelpCamp/blob/master/LICENSE "License")'s file stipulate, you are free to use and modify all the content as long as you mention the author and don't accomplish that with a commercial purpose.
 
-If you wish you run the app on your own server, will have to install [Node.js](https://nodejs.org/en/ "Node.js") and all the modules (see [package.json's](https://github.com/Roildan/YelpCamp/blob/master/package.json "package.json")) with [npm](https://www.npmjs.com/ "NPM").  
+If you wish to run this app on your own server, will have to install [Node.js](https://nodejs.org/en/ "Node.js") and all the modules used (see [package.json's](https://github.com/Roildan/YelpCamp/blob/master/package.json "package.json")) with [npm](https://www.npmjs.com/ "NPM").  
 You should also setup the following environment variables:
   - **MONGODB_URI:**      *The URL of your Mongo DataBase.*
   - **PORT:**             *Port used (`3000` on Live Version).*
@@ -40,8 +40,7 @@ You should also setup the following environment variables:
 | --------- | -------- | --------- |
 | Roildan   | password | **Admin** |
 | Linux     | password | **Admin** |
-| Franck    | pass     | **/**     |
-| Franck    | pass     | **/**     |
-| Franck    | pass     | **/**     |
-| Franck    | pass     | **/**     |
+| Frack     | pass     | **/**     |
+| Alice     | pass     | **/**     |
+| Jean      | pass     | **/**     |
 
