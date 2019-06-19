@@ -40,7 +40,6 @@ You should also setup the following environment variables:
 | --------- | -------- | --------- |
 | Roildan   | password | **Admin** |
 | Linux     | password | **Admin** |
-| Frack     | pass     | **/**     |
+| Franck    | pass     | **/**     |
 | Alice     | pass     | **/**     |
 | Jean      | pass     | **/**     |
-
